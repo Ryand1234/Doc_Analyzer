@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "ant-design": "^1.0.0",
+    "antd": "^5.12.4"
+  }
+}
