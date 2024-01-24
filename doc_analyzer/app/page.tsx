@@ -1,18 +1,14 @@
 "use client";
 import React, { useState } from 'react';
-import {
-  DesktopOutlined,
-  FileOutlined,
-  PieChartOutlined,
-  TeamOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
 import { Breadcrumb, Layout, theme } from 'antd';
 import Menu from './layout/sidebar'
 import ChatBox from './layout/chatbox';
 const { Header, Content, Footer, Sider } = Layout;
 import { Info } from './interface/chat-interface';
-
+import {
+  RightOutlined,
+  LeftOutlined
+} from '@ant-design/icons';
 const App: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
 
@@ -52,31 +48,49 @@ const App: React.FC = () => {
 
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <div
+    <Layout>
+      <Header
         style={{
+          position: 'fixed',
+          top: 0,
+          zIndex: 1,
+          width: '100%',
           display: 'flex',
-          overflow: 'scroll',
+          alignItems: 'center',
         }}
       >
-        <Sider style={{
-          position: 'fixed',
-          height: '100vh',
-          width: '10vw'
-        }} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-          <div className="demo-logo-vertical" />
+        <div className="demo-logo" />
+      </Header>
+
+      <Layout style={{ marginTop: '4rem', minHeight: '100vh' }}>
+        <Sider
+          style={{ overflow: 'auto', width: '200px', height: '100vh', position: 'fixed' }}
+          hidden={collapsed}>
+          {/* <div className="demo-logo-vertical" /> */}
           <Menu history={history} />
           {/* <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} /> */}
         </Sider>
-        <Layout style={{
+        {collapsed ? <RightOutlined style={{
+          color: 'black',
+          position: 'fixed',
+          top: '50%',
+          marginLeft: collapsed ? '10px' : '210px'
+        }} onClick={() => { setCollapsed(false) }} /> : <LeftOutlined style={{
+          color: 'black',
+          position: 'fixed',
+          top: '50%',
+          marginLeft: collapsed ? '80px' : '210px'
+        }} onClick={() => { setCollapsed(true) }} />}
+        <div style={{
           overflow: 'visible',
-          marginLeft: collapsed? '80px' : '200px'
+          marginLeft: '15vw',
+          marginRight: '15vw'
         }}>
           <ChatBox messages={messages} />
           <Footer style={{ textAlign: 'center' }}>Ant Design ©2023 Created by Ant UED</Footer>
-        </Layout>
-      </div>
-    </Layout>
+        </div>
+      </Layout>
+    </Layout >
   );
 };
 

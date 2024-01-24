@@ -9,9 +9,7 @@ export default function ChatBox({ messages }: MenuProps) {
     } = theme.useToken();
     return (
         <>
-            <Content style={{ 
-                margin: '0 16px'
-            }}>
+            <Content>
                 {messages.map((element, index) => (
                     <Message key={index} message={element.message} user={element.user}/>
                 ))}
