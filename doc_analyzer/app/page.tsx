@@ -24,11 +24,10 @@ const suffix = (
   />
 );
 
-const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
 
 const App: React.FC = () => {
   const [collapsed, setCollapsed] = useState(true);
-
+  
 
   const history: Array<string> = [
     "iterate, add it",
@@ -36,7 +35,7 @@ const App: React.FC = () => {
     "Full Stack Developer Requirements"
   ]
 
-  const messages: Array<Info> = [
+  const [messages, setMessages] = useState([
     {
       "user": "Riyan",
       "message": "Hi"
@@ -61,9 +60,14 @@ const App: React.FC = () => {
       "user": "Bot",
       "message": "JavaScript and Java are different programming languages. JavaScript is a scripting language used for web development, while Java is a general-purpose programming language. They have different use cases and syntax."
     },
-  ]
+  ]);
 
+const onSearch: SearchProps['onSearch'] = (value, _e, info) => {console.log(info?.source, value); messages.push( {
+  "user": "Riyan",
+  "message": value
+}); setMessages(messages);};
 
+  
   return (
     <Layout>
       <Header
@@ -79,13 +83,11 @@ const App: React.FC = () => {
         <div className="demo-logo" />
       </Header>
 
-      <Layout style={{ marginTop: '4rem', minHeight: '100vh' }}>
+      <Layout style={{ marginTop: '4rem' }}>
         <Sider
           style={{ overflow: 'auto', width: '200px', height: '100vh', position: 'fixed' }}
           hidden={collapsed}>
-          {/* <div className="demo-logo-vertical" /> */}
           <Menu history={history} />
-          {/* <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} /> */}
         </Sider>
         {collapsed ? <RightOutlined style={{
           color: 'black',
@@ -107,30 +109,30 @@ const App: React.FC = () => {
         </div>
       </Layout>
       <div
-              style={{
-                position: 'fixed',
-                bottom: 0,
-                zIndex: 1,
-                paddingLeft: '20vw',
-              width: '100%',
-                paddingRight: '20vw',
-                backgroundColor: '#f5f5f5',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-              }}>
-            <Search
-            style={{
-              width: '60%',
-            }}
-              placeholder="input search text"
-              enterButton="Search"
-              size="large"
-              suffix={suffix}
-              onSearch={onSearch}
-            />
-            <Footer style={{ textAlign: 'center' }}>Ant Design ©2023 Created by Ant UED</Footer>
-          </div>
+        style={{
+          position: 'fixed',
+          bottom: 0,
+          zIndex: 1,
+          paddingLeft: '20vw',
+          width: '100%',
+          paddingRight: '20vw',
+          backgroundColor: '#f5f5f5',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}>
+        <Search
+          style={{
+            width: '90%',
+          }}
+          placeholder="input search text"
+          enterButton="Search"
+          size="large"
+          suffix={suffix}
+          onSearch={onSearch}
+        />
+        <Footer style={{ textAlign: 'center' }}>Ant Design ©2023 Created by Ant UED</Footer>
+      </div>
     </Layout >
   );
 };
