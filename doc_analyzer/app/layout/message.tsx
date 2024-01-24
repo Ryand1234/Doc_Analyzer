@@ -46,7 +46,7 @@ export default function Message({ user, message }: Info) {
             </div>
             <div><p style={{
                 textAlign: 'justify', 
-            }}>{message}</p> <UserOutlined hidden={hidden}/></div>
+            }}>{message}</p> <span style={{position: 'absolute'}}><UserOutlined hidden={hidden}/></span></div>
         </div>
     )
 };

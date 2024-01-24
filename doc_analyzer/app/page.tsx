@@ -9,8 +9,25 @@ import {
   RightOutlined,
   LeftOutlined
 } from '@ant-design/icons';
+import { AudioOutlined } from '@ant-design/icons';
+import { Input, Space } from 'antd';
+import type { SearchProps } from 'antd/es/input/Search';
+
+const { Search } = Input;
+
+const suffix = (
+  <AudioOutlined
+    style={{
+      fontSize: 16,
+      color: '#1677ff',
+    }}
+  />
+);
+
+const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
+
 const App: React.FC = () => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
 
 
   const history: Array<string> = [
@@ -83,13 +100,37 @@ const App: React.FC = () => {
         }} onClick={() => { setCollapsed(true) }} />}
         <div style={{
           overflow: 'visible',
-          marginLeft: '15vw',
-          marginRight: '15vw'
+          marginLeft: '20vw',
+          marginRight: '20vw'
         }}>
           <ChatBox messages={messages} />
-          <Footer style={{ textAlign: 'center' }}>Ant Design ©2023 Created by Ant UED</Footer>
         </div>
       </Layout>
+      <div
+              style={{
+                position: 'fixed',
+                bottom: 0,
+                zIndex: 1,
+                paddingLeft: '20vw',
+              width: '100%',
+                paddingRight: '20vw',
+                backgroundColor: '#f5f5f5',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}>
+            <Search
+            style={{
+              width: '60%',
+            }}
+              placeholder="input search text"
+              enterButton="Search"
+              size="large"
+              suffix={suffix}
+              onSearch={onSearch}
+            />
+            <Footer style={{ textAlign: 'center' }}>Ant Design ©2023 Created by Ant UED</Footer>
+          </div>
     </Layout >
   );
 };
