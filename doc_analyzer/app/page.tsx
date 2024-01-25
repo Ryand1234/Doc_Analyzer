@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState  } from 'react';
 import { Breadcrumb, Layout, theme } from 'antd';
 import Menu from './layout/sidebar'
 import ChatBox from './layout/chatbox';
@@ -12,7 +12,7 @@ import {
 import { AudioOutlined } from '@ant-design/icons';
 import { Input, Space } from 'antd';
 import type { SearchProps } from 'antd/es/input/Search';
-
+import callGPT from './server/openrouter';
 const { Search } = Input;
 
 const suffix = (
@@ -27,6 +27,8 @@ const suffix = (
 
 const App: React.FC = () => {
   const [collapsed, setCollapsed] = useState(true);
+  const [inputValue, setInputValue] = useState('')
+  const [hold, setHold] = useState(false);
   
 
   const history: Array<string> = [
@@ -62,10 +64,30 @@ const App: React.FC = () => {
     },
   ]);
 
-const onSearch: SearchProps['onSearch'] = (value, _e, info) => {console.log(info?.source, value); messages.push( {
-  "user": "Riyan",
-  "message": value
-}); setMessages(messages);};
+
+const onSearch: SearchProps['onSearch'] = async (value, _e, info) => {console.log(info?.source, value); 
+  if(hold){
+    return
+  }
+  setInputValue('');
+  setHold(true);
+  setMessages(prevMessages => [
+  ...prevMessages,
+  {
+    user: "Riyan",
+    message: value
+  }
+]);
+  const result = await callGPT(value);
+  setMessages(prevMessages => [
+    ...prevMessages,
+    {
+      user: "Bot",
+      message: result
+    }
+  ]);
+  setHold(false);
+};
 
   
   return (
@@ -101,7 +123,7 @@ const onSearch: SearchProps['onSearch'] = (value, _e, info) => {console.log(info
           marginLeft: collapsed ? '80px' : '210px'
         }} onClick={() => { setCollapsed(true) }} />}
         <div style={{
-          overflow: 'visible',
+          overflow: 'auto',
           marginLeft: '20vw',
           marginRight: '20vw'
         }}>
@@ -128,8 +150,10 @@ const onSearch: SearchProps['onSearch'] = (value, _e, info) => {console.log(info
           placeholder="input search text"
           enterButton="Search"
           size="large"
-          suffix={suffix}
+        value={inputValue}
+        suffix={suffix}
           onSearch={onSearch}
+          onChange={(e) => setInputValue(e.target.value)}
         />
         <Footer style={{ textAlign: 'center' }}>Ant Design ©2023 Created by Ant UED</Footer>
       </div>

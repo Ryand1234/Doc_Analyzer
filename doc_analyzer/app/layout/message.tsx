@@ -6,18 +6,19 @@ import { Info } from '../interface/chat-interface';
 import Image from 'next/image'
 import userImg from '../../public/user.png'
 import {
-  DesktopOutlined,
-  FileOutlined,
-  PieChartOutlined,
-  TeamOutlined,
-  UserOutlined,
+    DesktopOutlined,
+    FileOutlined,
+    PieChartOutlined,
+    TeamOutlined,
+    UserOutlined,
 } from '@ant-design/icons';
 import bot from '../../public/bot.png'
 export default function Message({ user, message }: Info) {
-  const [hidden, setHidden] = useState(true);
-  const {
+    const [hidden, setHidden] = useState(true);
+    const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
+
     return (
         <div
             style={{
@@ -29,8 +30,8 @@ export default function Message({ user, message }: Info) {
                 color: 'black',
                 borderRadius: borderRadiusLG,
             }}
-            onMouseEnter={() => {setHidden(false)}}
-            onMouseLeave={() => {setHidden(true)}}
+            onMouseEnter={() => { setHidden(false) }}
+            onMouseLeave={() => { setHidden(true) }}
         >
             <div
                 style={{
@@ -44,9 +45,14 @@ export default function Message({ user, message }: Info) {
                     padding: '10px',
                 }}><strong>{user}</strong></p>
             </div>
-            <div><p style={{
-                textAlign: 'justify', 
-            }}>{message}</p> <span style={{position: 'absolute'}}><UserOutlined hidden={hidden}/></span></div>
+            <div>
+                <pre style={{
+                    textAlign: 'justify',
+                }}><code>{message}</code></pre>
+                <span style={{ position: 'absolute' }}>
+                    <UserOutlined hidden={hidden} />
+                </span>
+            </div>
         </div>
     )
 };
