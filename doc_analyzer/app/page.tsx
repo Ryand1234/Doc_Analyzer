@@ -145,7 +145,7 @@ const onSearch: SearchProps['onSearch'] = async (value, _e, info) => {console.lo
         }}>
         <Search
           style={{
-            width: '90%',
+            width: '100%',
           }}
           placeholder="input search text"
           enterButton="Search"
