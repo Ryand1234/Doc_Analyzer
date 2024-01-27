@@ -1,4 +1,4 @@
-'use server';
+// 'use server';
 
 export default async function callGPT(text: string) {
   const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
