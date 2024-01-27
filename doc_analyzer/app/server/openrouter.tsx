@@ -11,7 +11,7 @@ export default async function callGPT(text: string) {
     body: JSON.stringify({
       "model": "mistralai/mistral-7b-instruct", // Optional (user controls the default),
       "messages": [
-        { "role": "user", "content": `Question: ${text}` },
+        { "role": "user", "content": `Question: ${text}.` },
       ]
     })
   });

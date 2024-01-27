@@ -92,8 +92,12 @@ const App: React.FC = () => {
       conversationString = `${summary}\n${lastFiveMessages}`;
     }
   
-    const result = await callGPT(`${conversationString}\nUser: ${value}`);
-  
+    let result = await callGPT(`${conversationString}\nUser: ${value}\nGive the answer in html format only.`);
+    let lines = result.split('\n');
+    lines.pop();
+    lines.shift();
+    lines.pop();
+    result = lines.join('\n')
     setMessages(prevMessages => [
       ...prevMessages,
       {
@@ -123,6 +127,7 @@ const App: React.FC = () => {
           position: 'fixed',
           top: 0,
           zIndex: 1,
+          height: '14%',
           width: '100%',
           display: 'flex',
           alignItems: 'center',

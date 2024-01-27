@@ -12,9 +12,9 @@ export default function Card(data: CardData) {
         <div 
         id={data.id}
         style={{
-            margin: '20px',
-            padding: '10px',
-            minHeight: '7rvh',
+            marginRight: '10px',
+            paddingLeft: '5px',
+            paddingRight: '5px',
             color: 'black',
             textAlign: 'center',
             background: colorBgContainer,

@@ -49,7 +49,7 @@ export default function Message({ user, hide, message }: Info) {
             <div>
                 <p style={{
                     textAlign: 'justify',
-                }}>{message}</p>
+                }}  dangerouslySetInnerHTML={{ __html: message }}></p>
                 <span style={{ position: 'absolute' }}>
                     <UserOutlined hidden={hidden} />
                 </span>
