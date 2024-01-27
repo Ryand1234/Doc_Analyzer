@@ -15,7 +15,7 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) {
-  console.log("HO")
+  // console.log("HO")
   if (req.method === "GET") {
     res.status(405).json({ message: "Get not allowed" })
   }
@@ -33,7 +33,7 @@ export default function handler(
       if (!uploadedFile) {
         return res.status(400).json({ error: 'No file uploaded.' });
       }
-      console.log(uploadedFile);
+      // console.log(uploadedFile);
       // Process the file as needed
       const pdfData = Buffer.from(uploadedFile.buffer);
       // Parse the PDF content

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState  } from 'react';
-import { Breadcrumb, Layout, message, theme } from 'antd';
+import { Breadcrumb, Layout, message, theme } from 'antd';  
 import Menu from './layout/sidebar'
 import ChatBox from './layout/chatbox';
 const { Header, Content, Footer, Sider } = Layout;
@@ -48,7 +48,7 @@ const App: React.FC = () => {
   const [summary, setSummary] = useState("")
 
   const onSearch: SearchProps['onSearch'] = async (value, _e, info) => {
-    console.log(info?.source, value);
+    // console.log(info?.source, value);
   
     if (hold) {
       return;
@@ -57,7 +57,7 @@ const App: React.FC = () => {
     setInputValue('');
     setHold(true);
   
-    console.log(messages, summary);
+    // console.log(messages, summary);
   
     setMessages(prevMessages => [
       ...prevMessages,
@@ -96,7 +96,7 @@ const App: React.FC = () => {
       setSummary(newSummary);
     }
   
-    console.log(messages, summary);
+    // console.log(messages, summary);
     setHold(false);
   };
   

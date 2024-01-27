@@ -23,10 +23,10 @@ export default function NewChat({setMessages}: any) {
             onChange={(info) =>{
                 const { status } = info.file;
                 if (status !== 'uploading') {
-                    console.log(info.file, info.fileList);
+                    // console.log(info.file, info.fileList);
                 }
                 if (status === 'done') {
-                    console.log(info.file)
+                    // console.log(info.file)
                     setMessages((prevMessages: Array<Info>) => [
                         ...prevMessages,
                         {
