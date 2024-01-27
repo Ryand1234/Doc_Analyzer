@@ -110,7 +110,12 @@ const App: React.FC = () => {
     if (messages.length >= 2) {
       // Correct handling of last 5 messages for creating a new summary
       const lastFiveMessages = messages.slice(-2).map(turn => `${turn.user}: ${turn.message}`).join('\n');
-      const newSummary = await callGPT(`${summary || ''}\n${lastFiveMessages}\nUser: "Generate a comprehensive summary of the document/conversation, highlighting all significant points and crucial information. Ensure that the summary captures the main ideas, key findings, any numeric data mentioned and important context while excluding unnecessary details or specific examples. Provide a concise and informative summary that serves as a comprehensive overview of the content so that it can be used in future for context`);
+      let originalContext = '';
+      if(messages.length % 3 == 0) {
+        originalContext = (messages[1].hide) ? `Original Document Content: ${messages[1].message}` : '';
+      }
+      const summaryPrompt = `${originalContext}\nCurrent Summary: ${summary || ''}\nLast Five Messages:\n ${lastFiveMessages}\nUser: "Generate a comprehensive summary of the document/conversation, highlighting all significant points and crucial information. Ensure that the summary captures the main ideas, key findings, any numeric data mentioned and important context while excluding unnecessary details or specific examples. Provide a concise and informative summary that serves as a comprehensive overview of the content so that it can be used in future for context`
+      const newSummary = await callGPT(summaryPrompt);
       setSummary(newSummary);
     }
   
