@@ -106,6 +106,7 @@ const App: React.FC = () => {
         message: result
       }
     ]);
+    setHold(false);
   
     if (messages.length >= 2) {
       // Correct handling of last 5 messages for creating a new summary
@@ -115,7 +116,6 @@ const App: React.FC = () => {
     }
   
     // console.log(messages, summary);
-    setHold(false);
   };
   
 
@@ -127,7 +127,7 @@ const App: React.FC = () => {
           position: 'fixed',
           top: 0,
           zIndex: 1,
-          height: '14%',
+          height: '10%',
           width: '100%',
           display: 'flex',
           alignItems: 'center',
@@ -165,14 +165,14 @@ const App: React.FC = () => {
         { messages.length == 1 ? (
         <div style={{
           overflow: 'auto',
-          marginLeft: '20vw',
-          marginRight: '20vw'
+          marginLeft: '10vw',
+          marginRight: '10vw'
         }}>
           <NewChat setMessages={setMessages}/>
         </div>) : (<div style={{
           overflow: 'auto',
-          marginLeft: '20vw',
-          marginRight: '20vw'
+          marginLeft: '10vw',
+          marginRight: '10vw'
         }}>
           <ChatBox messages={messages} />
         </div>)}
@@ -190,6 +190,7 @@ const App: React.FC = () => {
           flexDirection: 'column',
           alignItems: 'center',
         }}>
+          <p style={{ color: 'black', display: (hold) ? 'block' : 'none'}}>Bot is analyzing your document!!! Please wait a little ;)</p>
         <Search
           style={{
             width: '100%',

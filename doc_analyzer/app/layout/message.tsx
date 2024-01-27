@@ -5,14 +5,12 @@ const { Header, Content, Footer, Sider } = Layout;
 import { Info } from '../interface/chat-interface';
 import Image from 'next/image'
 import userImg from '../../public/user.png'
+import './message.css'
 import {
-    DesktopOutlined,
-    FileOutlined,
-    PieChartOutlined,
-    TeamOutlined,
     UserOutlined,
 } from '@ant-design/icons';
 import bot from '../../public/bot.png'
+
 export default function Message({ user, hide, message }: Info) {
     const [hidden, setHidden] = useState(true);
     const {
@@ -47,9 +45,9 @@ export default function Message({ user, hide, message }: Info) {
                 }}><strong>{user}</strong></p>
             </div>
             <div>
-                <p style={{
+                <div style={{
                     textAlign: 'justify',
-                }}  dangerouslySetInnerHTML={{ __html: message }}></p>
+                }}  dangerouslySetInnerHTML={{ __html: message }}></div>
                 <span style={{ position: 'absolute' }}>
                     <UserOutlined hidden={hidden} />
                 </span>
