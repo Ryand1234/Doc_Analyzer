@@ -3,7 +3,7 @@ import { InboxOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
 import { message, Upload } from 'antd';
 const { Dragger } = Upload;
-
+import {Info} from '../interface/chat-interface'
 const props: UploadProps = {
     name: 'file',
     multiple: false,
@@ -14,7 +14,7 @@ const props: UploadProps = {
 };
 
 
-export default function NewChat({setMessages}) {
+export default function NewChat({setMessages}: any) {
     return (
         <div style={{
             height: '80vh',
@@ -27,7 +27,7 @@ export default function NewChat({setMessages}) {
                 }
                 if (status === 'done') {
                     console.log(info.file)
-                    setMessages(prevMessages => [
+                    setMessages((prevMessages: Array<Info>) => [
                         ...prevMessages,
                         {
                           user: "User",

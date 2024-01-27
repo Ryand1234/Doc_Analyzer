@@ -38,11 +38,11 @@ const App: React.FC = () => {
     "Full Stack Developer Requirements"
   ]
 
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState<Array<Info>>([
     {
       "user": "Bot",
       "hide": false,
-      "message": "Hi User!, Please Upload the doc that you want to summarize and ask questions on ;)"
+      "message": "Hi User!, Thanks for uploading the doc. You can ask questions on the doc now ;)"
     },
   ]);
   const [summary, setSummary] = useState("")
@@ -118,7 +118,7 @@ const App: React.FC = () => {
       </Header>
 
       <Layout style={{ marginTop: '4rem' }}>
-        <Sider
+        {/* <Sider
           style={{ overflow: 'auto', width: '200px', height: '100vh', position: 'fixed' }}
           hidden={collapsed}>
           <Menu history={history} />
@@ -133,7 +133,7 @@ const App: React.FC = () => {
           position: 'fixed',
           top: '50%',
           marginLeft: collapsed ? '80px' : '210px'
-        }} onClick={() => { setCollapsed(true) }} />}
+        }} onClick={() => { setCollapsed(true) }} />} */}
         { messages.length == 1 ? (
         <div style={{
           overflow: 'auto',
