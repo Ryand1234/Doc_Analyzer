@@ -12,8 +12,8 @@ export const config = {
   }
 };
 export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<any>
+  req: any,
+  res: any
 ) {
   // console.log("HO")
   if (req.method === "GET") {
