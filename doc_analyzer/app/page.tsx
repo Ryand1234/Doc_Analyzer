@@ -94,6 +94,7 @@ const App: React.FC = () => {
   
     let result = await callGPT(`${conversationString}\nUser: ${value}\nGive the answer in html format only.`);
     let lines = result.split('\n');
+    console.log(lines, result)
     lines.pop();
     lines.shift();
     result = lines.join('\n')
@@ -137,7 +138,7 @@ const App: React.FC = () => {
           alignItems: 'center',
         }}
       >
-        <Image alt="logo" width={50} height={50} src={logo} />
+        <Image alt="logo" width={150} height={150} src={logo} />
         <div style={{
             right: 5,
             position: 'inherit',
