@@ -1,6 +1,6 @@
 "use client";
 import React, { useState  } from 'react';
-import { Breadcrumb, Layout, theme } from 'antd';
+import { Breadcrumb, Layout, message, theme } from 'antd';
 import Menu from './layout/sidebar'
 import ChatBox from './layout/chatbox';
 const { Header, Content, Footer, Sider } = Layout;
@@ -41,34 +41,65 @@ const App: React.FC = () => {
   const [messages, setMessages] = useState([
     {
       "user": "Bot",
+      "hide": false,
       "message": "Hi User!, Please Upload the doc that you want to summarize and ask questions on ;)"
     },
   ]);
+  const [summary, setSummary] = useState("")
 
-
-const onSearch: SearchProps['onSearch'] = async (value, _e, info) => {console.log(info?.source, value); 
-  if(hold){
-    return
-  }
-  setInputValue('');
-  setHold(true);
-  setMessages(prevMessages => [
-  ...prevMessages,
-  {
-    user: "Riyan",
-    message: value
-  }
-]);
-  const result = await callGPT(value);
-  setMessages(prevMessages => [
-    ...prevMessages,
-    {
-      user: "Bot",
-      message: result
+  const onSearch: SearchProps['onSearch'] = async (value, _e, info) => {
+    console.log(info?.source, value);
+  
+    if (hold) {
+      return;
     }
-  ]);
-  setHold(false);
-};
+  
+    setInputValue('');
+    setHold(true);
+  
+    console.log(messages, summary);
+  
+    setMessages(prevMessages => [
+      ...prevMessages,
+      {
+        user: "User",
+        hide: false,
+        message: value
+      }
+    ]);
+  
+    let conversationString = "";
+  
+    if (summary == null) {
+      conversationString = messages.map(turn => `${turn.user}: ${turn.message}`).join('\n');
+    } else {
+      // Ensure correct handling of summary and last 5 messages
+      const lastFiveMessages = messages.slice(-5).map(turn => `${turn.user}: ${turn.message}`).join('\n');
+      conversationString = `${summary}\n${lastFiveMessages}`;
+    }
+  
+    const result = await callGPT(`${conversationString}\nUser: ${value}`);
+  
+    setMessages(prevMessages => [
+      ...prevMessages,
+      {
+        user: "Bot",
+        hide: false,
+        message: result
+      }
+    ]);
+  
+    if (messages.length >= 2) {
+      // Correct handling of last 5 messages for creating a new summary
+      const lastFiveMessages = messages.slice(-2).map(turn => `${turn.user}: ${turn.message}`).join('\n');
+      const newSummary = await callGPT(`${summary || ''}\n${lastFiveMessages}\nUser: summarize this conversation so that it can be used in future for context`);
+      setSummary(newSummary);
+    }
+  
+    console.log(messages, summary);
+    setHold(false);
+  };
+  
 
   
   return (
@@ -109,7 +140,7 @@ const onSearch: SearchProps['onSearch'] = async (value, _e, info) => {console.lo
           marginLeft: '20vw',
           marginRight: '20vw'
         }}>
-          <NewChat />
+          <NewChat setMessages={setMessages}/>
         </div>) : (<div style={{
           overflow: 'auto',
           marginLeft: '20vw',

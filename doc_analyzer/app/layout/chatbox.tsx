@@ -11,7 +11,7 @@ export default function ChatBox({ messages }: MenuProps) {
         <>
             <Content style={{height: '100vh', paddingBottom: '20vh'}}>
                 {messages.map((element, index) => (
-                    <Message key={index} message={element.message} user={element.user} />
+                    <Message key={index} hide={element.hide} message={element.message} user={element.user} />
                 ))}
             </Content>
 

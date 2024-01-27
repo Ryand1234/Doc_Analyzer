@@ -13,7 +13,7 @@ import {
     UserOutlined,
 } from '@ant-design/icons';
 import bot from '../../public/bot.png'
-export default function Message({ user, message }: Info) {
+export default function Message({ user, hide, message }: Info) {
     const [hidden, setHidden] = useState(true);
     const {
         token: { colorBgContainer, borderRadiusLG },
@@ -28,6 +28,7 @@ export default function Message({ user, message }: Info) {
                 // width: '90vw',
                 // background: 'black',
                 color: 'black',
+                display: (!hide) ? 'block' : 'none',
                 borderRadius: borderRadiusLG,
             }}
             onMouseEnter={() => { setHidden(false) }}
