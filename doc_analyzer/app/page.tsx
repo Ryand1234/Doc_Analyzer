@@ -13,6 +13,7 @@ import { AudioOutlined } from '@ant-design/icons';
 import { Input, Space } from 'antd';
 import type { SearchProps } from 'antd/es/input/Search';
 import callGPT from './server/openrouter';
+import NewChat from './layout/new-chat';
 const { Search } = Input;
 
 const suffix = (
@@ -39,28 +40,8 @@ const App: React.FC = () => {
 
   const [messages, setMessages] = useState([
     {
-      "user": "Riyan",
-      "message": "Hi"
-    },
-    {
       "user": "Bot",
-      "message": "How I can help you?"
-    },
-    {
-      "user": "Riyan",
-      "message": "I have a question about programming."
-    },
-    {
-      "user": "Bot",
-      "message": "Sure, feel free to ask your question!"
-    },
-    {
-      "user": "Riyan",
-      "message": "What is the difference between JavaScript and Java?"
-    },
-    {
-      "user": "Bot",
-      "message": "JavaScript and Java are different programming languages. JavaScript is a scripting language used for web development, while Java is a general-purpose programming language. They have different use cases and syntax."
+      "message": "Hi User!, Please Upload the doc that you want to summarize and ask questions on ;)"
     },
   ]);
 
@@ -122,13 +103,20 @@ const onSearch: SearchProps['onSearch'] = async (value, _e, info) => {console.lo
           top: '50%',
           marginLeft: collapsed ? '80px' : '210px'
         }} onClick={() => { setCollapsed(true) }} />}
+        { messages.length == 1 ? (
         <div style={{
           overflow: 'auto',
           marginLeft: '20vw',
           marginRight: '20vw'
         }}>
+          <NewChat />
+        </div>) : (<div style={{
+          overflow: 'auto',
+          marginLeft: '20vw',
+          marginRight: '20vw'
+        }}>
           <ChatBox messages={messages} />
-        </div>
+        </div>)}
       </Layout>
       <div
         style={{
