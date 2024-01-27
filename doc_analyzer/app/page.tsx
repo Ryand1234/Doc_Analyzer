@@ -1,8 +1,10 @@
 "use client";
+import Image from 'next/image'
 import React, { useState  } from 'react';
 import { Breadcrumb, Layout, message, theme } from 'antd';  
 import Menu from './layout/sidebar'
 import ChatBox from './layout/chatbox';
+import Card from './layout/card';
 const { Header, Content, Footer, Sider } = Layout;
 import { Info } from './interface/chat-interface';
 import {
@@ -14,6 +16,7 @@ import { Input, Space } from 'antd';
 import type { SearchProps } from 'antd/es/input/Search';
 import callGPT from './server/openrouter';
 import NewChat from './layout/new-chat';
+import logo from '../public/logo.jpeg'
 const { Search } = Input;
 
 const suffix = (
@@ -47,9 +50,20 @@ const App: React.FC = () => {
   ]);
   const [summary, setSummary] = useState("")
 
+  const resetConversation = () => {
+    setMessages([
+      {
+        "user": "Bot",
+        "hide": false,
+        "message": "Hi User!, Thanks for uploading the doc. You can ask questions on the doc now ;)"
+      }
+    ])
+    setSummary("");
+    alert("Conversation Restarted")
+  }
+
   const onSearch: SearchProps['onSearch'] = async (value, _e, info) => {
     // console.log(info?.source, value);
-  
     if (hold) {
       return;
     }
@@ -114,7 +128,16 @@ const App: React.FC = () => {
           alignItems: 'center',
         }}
       >
-        <div className="demo-logo" />
+        <Image alt="logo" width={50} height={50} src={logo} />
+        <div style={{
+            right: 5,
+            position: 'inherit',
+            margin: '2px'
+        }}>
+          <Card key={1} id={"1"} text={"Reset Conversation"} onClick={resetConversation}/>
+
+        </div>
+        
       </Header>
 
       <Layout style={{ marginTop: '4rem' }}>

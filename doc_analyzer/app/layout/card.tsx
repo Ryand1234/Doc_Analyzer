@@ -1,7 +1,8 @@
 import { Breadcrumb, Layout, theme } from 'antd';
 interface CardData {
   id: string
-  text: string
+  text: string | number
+  onClick: any
 }
 export default function Card(data: CardData) {
     const {
@@ -23,7 +24,8 @@ export default function Card(data: CardData) {
             whiteSpace: 'nowrap',
             textOverflow: 'ellipsis'
           }}
-          onClick={(e) => {alert(e.currentTarget.outerText);}}>
+          onClick={(data.onClick == null) ? (e) => {alert(e.currentTarget.outerText);} : data.onClick}
+          >
             <p>{data.text}</p>
         </div>
     )
