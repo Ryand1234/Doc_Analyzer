@@ -3,7 +3,7 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 // Access your API key as an environment variable (see "Set up your API key" above)
 console.log(process.env.GEMINI_API_KEY, process.env)
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const genAI = new GoogleGenerativeAI(process.env.NEXT_GEMINI_API_KEY);
 
 const MODEL_NAME = 'gemini-pro'
 
