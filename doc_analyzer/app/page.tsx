@@ -1,6 +1,6 @@
 "use client";
-import React, { useState  } from 'react';
-import { Layout, Button } from 'antd';  
+import React, { useState } from 'react';
+import { Layout, Button } from 'antd';
 import ChatBox from './layout/chatbox';
 import Card from './layout/card';
 const { Header } = Layout;
@@ -8,7 +8,7 @@ import { Info } from './interface/chat-interface';
 import { AudioOutlined, FileSearchOutlined } from '@ant-design/icons';
 import { Input, Space } from 'antd';
 import type { SearchProps } from 'antd/es/input/Search';
-import callGPT from './server/openrouter';
+import callGPT from './server/gemeni';
 import NewChat from './layout/new-chat';
 import { Toaster } from "react-hot-toast";
 import { toast } from 'react-hot-toast';
@@ -28,7 +28,7 @@ const App: React.FC = () => {
   const [collapsed, setCollapsed] = useState(true);
   const [inputValue, setInputValue] = useState('')
   const [hold, setHold] = useState(false);
-  
+
 
   const history: Array<string> = [
     "iterate, add it",
@@ -62,64 +62,67 @@ const App: React.FC = () => {
     if (hold) {
       return;
     }
-  
-    setInputValue('');
-    setHold(true);
-  
-    // console.log(messages, summary);
-  
-    setMessages(prevMessages => [
-      ...prevMessages,
-      {
-        user: "User",
-        hide: false,
-        message: value
+    try {
+      setInputValue('');
+      setHold(true);
+
+      // console.log(messages, summary);
+
+      setMessages(prevMessages => [
+        ...prevMessages,
+        {
+          user: "User",
+          hide: false,
+          message: value
+        }
+      ]);
+
+      let conversationString = "";
+
+      if (summary == null) {
+        conversationString = messages.map(turn => `${turn.user}: ${turn.message}`).join('\n');
+      } else {
+        // Ensure correct handling of summary and last 5 messages
+        const lastFiveMessages = messages.slice(-5).map(turn => `${turn.user}: ${turn.message}`).join('\n');
+        conversationString = `${summary}\n${lastFiveMessages}`;
       }
-    ]);
-  
-    let conversationString = "";
-  
-    if (summary == null) {
-      conversationString = messages.map(turn => `${turn.user}: ${turn.message}`).join('\n');
-    } else {
-      // Ensure correct handling of summary and last 5 messages
-      const lastFiveMessages = messages.slice(-5).map(turn => `${turn.user}: ${turn.message}`).join('\n');
-      conversationString = `${summary}\n${lastFiveMessages}`;
+
+      let result = await callGPT(`${conversationString}\nUser: ${value}\nGive the response in html format in "utf-8" only.`);
+      let lines = result.split('\n');
+      lines.pop();
+      lines.shift();
+      result = lines.join('\n')
+
+      setMessages(prevMessages => [
+        ...prevMessages,
+        {
+          user: "Bot",
+          hide: false,
+          message: result
+        }
+      ]);
     }
-  
-    let result = await callGPT(`${conversationString}\nUser: ${value}\nGive the answer in html format only.`);
-    let lines = result.split('\n');
-    console.log(lines, result)
-    lines.pop();
-    lines.shift();
-    result = lines.join('\n')
-    setMessages(prevMessages => [
-      ...prevMessages,
-      {
-        user: "Bot",
-        hide: false,
-        message: result
-      }
-    ]);
-    setHold(false);
-  
+    finally {
+      setHold(false);
+    }
+
     if (messages.length >= 2) {
       // Correct handling of last 5 messages for creating a new summary
       const lastFiveMessages = messages.slice(-2).map(turn => `${turn.user}: ${turn.message}`).join('\n');
       let originalContext = '';
-      if(messages.length % 5 == 0) {
+      if (messages.length % 5 == 0) {
         originalContext = (messages[1].hide) ? `Original Document Content: ${messages[1].message}` : '';
       }
       const summaryPrompt = `${originalContext}\nCurrent Summary: ${summary || ''}\nLast Five Messages:\n ${lastFiveMessages}\nUser: "Generate a comprehensive summary of the document/conversation, highlighting all significant points and crucial information. Ensure that the summary captures the main ideas, key findings, any numeric data mentioned and important context while excluding unnecessary details or specific examples. Provide a concise and informative summary that serves as a comprehensive overview of the content so that it can be used in future for context`
       const newSummary = await callGPT(summaryPrompt);
       setSummary(newSummary);
     }
-  
+
     // console.log(messages, summary);
   };
-  
 
-  
+
+
   return (
     <Layout>
       <div
@@ -135,9 +138,9 @@ const App: React.FC = () => {
         }}
       >
         <div style={{
-            right: 5,
-            position: 'inherit',
-            margin: '2px'
+          right: 5,
+          position: 'inherit',
+          margin: '2px'
         }}>
           {/* <Card key={1} id={"1"} text={"New Conversation"} onClick={resetConversation}/> */}
           <Button type="primary" icon={<FileSearchOutlined />} size="middle" onClick={resetConversation}>
@@ -150,22 +153,22 @@ const App: React.FC = () => {
       </div>
 
       <Layout style={{ marginTop: '4rem' }}>
-        { messages.length == 1 ? (
-        <div style={{
-          overflow: 'auto',
-          marginLeft: '10vw',
-          marginRight: '10vw'
-        }}>
-          <NewChat setMessages={setMessages}/>
-        </div>) : (<div style={{
-          overflow: 'auto',
-          marginLeft: '10vw',
-          marginRight: '10vw'
-        }}>
-          <ChatBox messages={messages} />
-        </div>)}
+        {messages.length == 1 ? (
+          <div style={{
+            overflow: 'auto',
+            marginLeft: '10vw',
+            marginRight: '10vw'
+          }}>
+            <NewChat setMessages={setMessages} />
+          </div>) : (<div style={{
+            overflow: 'auto',
+            marginLeft: '10vw',
+            marginRight: '10vw'
+          }}>
+            <ChatBox messages={messages} />
+          </div>)}
       </Layout>
-      <div
+      {messages.length > 1 && <div
         style={{
           position: 'fixed',
           bottom: 30,
@@ -178,7 +181,7 @@ const App: React.FC = () => {
           flexDirection: 'column',
           alignItems: 'center',
         }}>
-          <p style={{ color: 'black', display: (hold) ? 'block' : 'none'}}>Bot is analyzing your document!!! Please wait a little ;)</p>
+        <p style={{ color: 'black', display: (hold) ? 'block' : 'none' }}>Bot is analyzing your document!!! Please wait a little ;)</p>
         <Search
           style={{
             width: '100%',
@@ -186,12 +189,12 @@ const App: React.FC = () => {
           placeholder="input search text"
           enterButton="Search"
           size="large"
-        value={inputValue}
-        suffix={suffix}
+          value={inputValue}
+          suffix={suffix}
           onSearch={onSearch}
           onChange={(e) => setInputValue(e.target.value)}
         />
-      </div>
+      </div>}
     </Layout >
   );
 };

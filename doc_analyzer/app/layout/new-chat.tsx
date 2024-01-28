@@ -35,7 +35,7 @@ export default function NewChat({setMessages}: any) {
                         {
                           user: "User",
                           hide: true,
-                          message: `Here is the document content, ${info.file.response.content}.`
+                          message: `Hi Gemini, Here is the document content, ${info.file.response.content}.`
                         }
                       ]);
                     message.success(`${info.file.name} file uploaded successfully.`);
