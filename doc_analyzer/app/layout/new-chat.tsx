@@ -1,9 +1,12 @@
 "use client";
+import Image from 'next/image'
 import { InboxOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
 import { message, Upload } from 'antd';
 const { Dragger } = Upload;
 import {Info} from '../interface/chat-interface'
+import logo from '../../public/home-screen-1.png'
+import './new-chat.css'
 const props: UploadProps = {
     name: 'file',
     multiple: false,
@@ -16,9 +19,9 @@ const props: UploadProps = {
 
 export default function NewChat({setMessages}: any) {
     return (
-        <div style={{
-            height: '80vh',
-        }}>
+        <div className='new-chat'>
+            <Image className='new-chat-image' alt="logo" width={150} height={150} src={logo} />
+
             <Dragger {...props}
             onChange={(info) =>{
                 const { status } = info.file;

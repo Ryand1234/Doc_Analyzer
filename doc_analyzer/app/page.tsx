@@ -1,22 +1,17 @@
 "use client";
-import Image from 'next/image'
 import React, { useState  } from 'react';
-import { Breadcrumb, Layout, message, theme } from 'antd';  
-import Menu from './layout/sidebar'
+import { Layout, Button } from 'antd';  
 import ChatBox from './layout/chatbox';
 import Card from './layout/card';
-const { Header, Content, Footer, Sider } = Layout;
+const { Header } = Layout;
 import { Info } from './interface/chat-interface';
-import {
-  RightOutlined,
-  LeftOutlined
-} from '@ant-design/icons';
-import { AudioOutlined } from '@ant-design/icons';
+import { AudioOutlined, FileSearchOutlined } from '@ant-design/icons';
 import { Input, Space } from 'antd';
 import type { SearchProps } from 'antd/es/input/Search';
 import callGPT from './server/openrouter';
 import NewChat from './layout/new-chat';
-import logo from '../public/logo.jpeg'
+import { Toaster } from "react-hot-toast";
+import { toast } from 'react-hot-toast';
 const { Search } = Input;
 
 const suffix = (
@@ -59,7 +54,7 @@ const App: React.FC = () => {
       }
     ])
     setSummary("");
-    alert("Conversation Restarted")
+    toast.success('New Conversation Started!');
   }
 
   const onSearch: SearchProps['onSearch'] = async (value, _e, info) => {
@@ -127,10 +122,11 @@ const App: React.FC = () => {
   
   return (
     <Layout>
-      <Header
+      <div
         style={{
           position: 'fixed',
           top: 0,
+          background: '#001529',
           zIndex: 1,
           height: '10%',
           width: '100%',
@@ -138,35 +134,22 @@ const App: React.FC = () => {
           alignItems: 'center',
         }}
       >
-        <Image alt="logo" width={150} height={150} src={logo} />
         <div style={{
             right: 5,
             position: 'inherit',
             margin: '2px'
         }}>
-          <Card key={1} id={"1"} text={"Reset Conversation"} onClick={resetConversation}/>
+          {/* <Card key={1} id={"1"} text={"New Conversation"} onClick={resetConversation}/> */}
+          <Button type="primary" icon={<FileSearchOutlined />} size="middle" onClick={resetConversation}>
+            New Conversation
+          </Button>
+          {/* <div style={{background: 'white'}}>New Conversation</div> */}
 
         </div>
-        
-      </Header>
+        <Toaster position="top-center" />
+      </div>
 
       <Layout style={{ marginTop: '4rem' }}>
-        {/* <Sider
-          style={{ overflow: 'auto', width: '200px', height: '100vh', position: 'fixed' }}
-          hidden={collapsed}>
-          <Menu history={history} />
-        </Sider>
-        {collapsed ? <RightOutlined style={{
-          color: 'black',
-          position: 'fixed',
-          top: '50%',
-          marginLeft: collapsed ? '10px' : '210px'
-        }} onClick={() => { setCollapsed(false) }} /> : <LeftOutlined style={{
-          color: 'black',
-          position: 'fixed',
-          top: '50%',
-          marginLeft: collapsed ? '80px' : '210px'
-        }} onClick={() => { setCollapsed(true) }} />} */}
         { messages.length == 1 ? (
         <div style={{
           overflow: 'auto',
@@ -185,7 +168,7 @@ const App: React.FC = () => {
       <div
         style={{
           position: 'fixed',
-          bottom: 0,
+          bottom: 30,
           zIndex: 1,
           paddingLeft: '20vw',
           width: '100%',
@@ -208,7 +191,6 @@ const App: React.FC = () => {
           onSearch={onSearch}
           onChange={(e) => setInputValue(e.target.value)}
         />
-        <Footer style={{ textAlign: 'center' }}>Ant Design ©2023 Created by Ant UED</Footer>
       </div>
     </Layout >
   );
