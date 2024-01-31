@@ -8,7 +8,7 @@ import { Info } from './interface/chat-interface';
 import { AudioOutlined, FileSearchOutlined } from '@ant-design/icons';
 import { Input, Space } from 'antd';
 import type { SearchProps } from 'antd/es/input/Search';
-import callGPT from './server/gemeni';
+import callGPT from './server/openrouter';
 import NewChat from './layout/new-chat';
 import { Toaster } from "react-hot-toast";
 import { toast } from 'react-hot-toast';
@@ -45,7 +45,7 @@ const App: React.FC = () => {
   ]);
   const [summary, setSummary] = useState("")
 
-  const resetConversation = () => {
+  const newConversation = () => {
     setMessages([
       {
         "user": "Bot",
@@ -56,6 +56,25 @@ const App: React.FC = () => {
     setSummary("");
     toast.success('New Conversation Started!');
   }
+
+
+  const resetConversation = () => {
+    setMessages([
+      {
+        "user": "Bot",
+        "hide": false,
+        "message": "Hi User!, Thanks for uploading the doc. You can ask questions on the doc now ;)"
+      },
+      {
+        "user": "User",
+        "hide": true,
+        "message": messages[1].message
+      }
+    ])
+    setSummary("");
+    toast.success('Conversation Restarted!');
+  }
+
 
   const onSearch: SearchProps['onSearch'] = async (value, _e, info) => {
     // console.log(info?.source, value);
@@ -106,14 +125,17 @@ const App: React.FC = () => {
       setHold(false);
     }
 
-    if (messages.length >= 2) {
+    if (messages.length >= 5) {
       // Correct handling of last 5 messages for creating a new summary
-      const lastFiveMessages = messages.slice(-2).map(turn => `${turn.user}: ${turn.message}`).join('\n');
+      const lastFiveMessages = messages.slice(-5).map(turn => `${turn.user}: ${turn.message}`).join('\n');
       let originalContext = '';
+      console.log(messages.length, messages.length%5)
       if (messages.length % 5 == 0) {
+        console.log(messages)
         originalContext = (messages[1].hide) ? `Original Document Content: ${messages[1].message}` : '';
       }
-      const summaryPrompt = `${originalContext}\nCurrent Summary: ${summary || ''}\nLast Five Messages:\n ${lastFiveMessages}\nUser: "Generate a comprehensive summary of the document/conversation, highlighting all significant points and crucial information. Ensure that the summary captures the main ideas, key findings, any numeric data mentioned and important context while excluding unnecessary details or specific examples. Provide a concise and informative summary that serves as a comprehensive overview of the content so that it can be used in future for context`
+      const summaryPrompt = `${originalContext}\nCurrent Summary: ${summary || ''}\nLast Five Messages:\n ${lastFiveMessages}\nUser: "Generate a comprehensive summary of the document/conversation, highlighting all significant points and crucial information.
+       Ensure that the summary captures the main ideas, key findings, any numeric data mentioned and important context like chapter and topic, what is present in them respect while excluding unnecessary details or specific examples. Provide a concise and informative summary that serves as a comprehensive overview of the content so that it can be used in future for context`
       const newSummary = await callGPT(summaryPrompt);
       setSummary(newSummary);
     }
@@ -129,7 +151,7 @@ const App: React.FC = () => {
         style={{
           position: 'fixed',
           top: 0,
-          background: '#001529',
+          background: 'black',
           zIndex: 1,
           height: '10%',
           width: '100%',
@@ -143,8 +165,11 @@ const App: React.FC = () => {
           margin: '2px'
         }}>
           {/* <Card key={1} id={"1"} text={"New Conversation"} onClick={resetConversation}/> */}
-          <Button type="primary" icon={<FileSearchOutlined />} size="middle" onClick={resetConversation}>
+          <Button type="primary" icon={<FileSearchOutlined />} size="middle" onClick={newConversation}>
             New Conversation
+          </Button>
+          <Button type="primary" icon={<FileSearchOutlined />} size="middle" onClick={resetConversation}>
+            Reset Conversation
           </Button>
           {/* <div style={{background: 'white'}}>New Conversation</div> */}
 
@@ -173,9 +198,9 @@ const App: React.FC = () => {
           position: 'fixed',
           bottom: 30,
           zIndex: 1,
-          paddingLeft: '20vw',
+          paddingLeft: '5%',
           width: '100%',
-          paddingRight: '20vw',
+          paddingRight: '5%',
           backgroundColor: '#f5f5f5',
           display: 'flex',
           flexDirection: 'column',
@@ -190,7 +215,7 @@ const App: React.FC = () => {
           enterButton="Search"
           size="large"
           value={inputValue}
-          suffix={suffix}
+          // suffix={suffix}
           onSearch={onSearch}
           onChange={(e) => setInputValue(e.target.value)}
         />
