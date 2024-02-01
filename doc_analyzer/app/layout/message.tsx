@@ -20,7 +20,7 @@ import bot from '../../public/bot.png'
 //       document.head.appendChild(scriptElement);
 //     });
 //   }
-  
+
 //   async function loadExternalScripts(scriptSrcs: any) {
 //     const scriptPromises = scriptSrcs.map(loadScript);
 //     await Promise.all(scriptPromises);
@@ -42,7 +42,7 @@ export default function Message({ user, hide, message }: Info) {
     //             const srcAttributeMatch = scriptSrcTag.match(/src=['"]([^'"]*)['"]/);
     //             return srcAttributeMatch ? srcAttributeMatch[1] : '';
     //           });
-              
+
     //     }
     //     let match = message.match(/<script\b[^>]*>([\s\S]*?)<\/script>/i);
     //     console.log("M1 :,", message, match, scriptSrcs)
@@ -64,12 +64,13 @@ export default function Message({ user, hide, message }: Info) {
         <div
             style={{
                 margin: '10px',
-                padding: '15px',
+                padding: '8px',
                 // width: '90vw',
                 // background: 'black',
                 color: 'black',
                 display: (!hide) ? 'block' : 'none',
-                lineHeight: '2em'
+                    textAlign: 'justify',
+                    lineHeight: '2em'
             }}
             className={`message`}
             id={`${user.toLowerCase()}`}
@@ -89,15 +90,11 @@ export default function Message({ user, hide, message }: Info) {
                 }}><strong>{user}</strong></p>
             </div>
             <div> */}
-                <span  
+            <span
                 id={`${user.toLowerCase()}-response`}
                 style={{
                     textAlign: 'justify',
                 }} dangerouslySetInnerHTML={{ __html: message }}></span>
-                {/* <span style={{ position: 'absolute' }}>
-                    <UserOutlined hidden={hidden} />
-                </span> */}
-            {/* </div> */}
         </div>
     )
 };

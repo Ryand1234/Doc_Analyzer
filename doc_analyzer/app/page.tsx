@@ -95,6 +95,14 @@ const App: React.FC = () => {
           message: value
         }
       ]);
+      setMessages(prevMessages => [
+        ...prevMessages,
+        {
+          user: "Bot",
+          hide: false,
+          message: "Bot is analyzing your message. Please give him a little time."
+        }
+      ]);
 
       let conversationString = "";
 
@@ -106,23 +114,35 @@ const App: React.FC = () => {
         conversationString = `${summary}\n${lastFiveMessages}`;
       }
 
-      let result = await callGPT(`${conversationString}\nUser: ${value}\nGive the response in html format in "utf-8" only.`);
+      let result = await callGPT(conversationString, value);
       let lines = result.split('\n');
       lines.pop();
       lines.shift();
       result = lines.join('\n')
+      result = result.split('Question:');
+      console.log(result)
+      if(result.length > 1) {
+        result = result[0]
+      }
+      setMessages(prevMessages => {
+        const lastMessageIndex = prevMessages.length - 1;
+        const updatedMessages = [...prevMessages];
 
-      setMessages(prevMessages => [
-        ...prevMessages,
-        {
+        // Update the last message
+        updatedMessages[lastMessageIndex] = {
           user: "Bot",
           hide: false,
           message: result
-        }
-      ]);
+        };
+        return updatedMessages;
+      });
+    }
+    catch (err) {
+      console.error(err);
     }
     finally {
       setHold(false);
+      console.log(messages)
     }
 
     if (messages.length >= 5) {
@@ -133,9 +153,10 @@ const App: React.FC = () => {
         console.log(messages)
         originalContext = (messages[1].hide) ? `Original Document Content: ${messages[1].message}` : '';
       }
-      const summaryPrompt = `${originalContext}\nCurrent Summary: ${summary || ''}\nLast Five Messages:\n ${lastFiveMessages}\nUser: "Generate a comprehensive summary of the document/conversation, highlighting all significant points and crucial information.
+      const summaryContext = `${originalContext}\nCurrent Summary: ${summary || ''}\nLast Five Messages:\n ${lastFiveMessages}`
+      const summaryPrompt = `Generate a comprehensive summary of the document/conversation, highlighting all significant points and crucial information.
        Ensure that the summary captures the main ideas, key findings, any numeric data mentioned and important context like chapter and topic, what is present in them respect while excluding unnecessary details or specific examples. Provide a concise and informative summary that serves as a comprehensive overview of the content so that it can be used in future for context`
-      const newSummary = await callGPT(summaryPrompt);
+      const newSummary = await callGPT(summaryContext, summaryPrompt);
       setSummary(newSummary);
     }
 
@@ -200,7 +221,6 @@ const App: React.FC = () => {
           alignItems: 'center',
           height: '10vh'
         }}>
-        <p style={{ position: 'absolute', bottom: 10, color: 'black', display: (hold) ? 'block' : 'none' }}>Bot is analyzing your document!!! Please wait a little ;)</p>
         <Search
           style={{
             // width: '100%'
