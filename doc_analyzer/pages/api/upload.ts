@@ -42,7 +42,8 @@ export default function handler(
         // Parse the PDF content
         pdfParse(pdfData).then((data) => {
           // Extracted text content from the PDF
-          const textContent = data.text;
+          let textContent = data.text;
+          textContent = textContent.replace(/\\n/g, '\n');
           res.status(200).json({ message: 'File uploaded successfully!', content: textContent });
 
         }).catch((error) => {

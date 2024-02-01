@@ -65,17 +65,18 @@ export default function Message({ user, hide, message }: Info) {
             style={{
                 margin: '10px',
                 padding: '15px',
-                minHeight: '5rem',
                 // width: '90vw',
                 // background: 'black',
                 color: 'black',
                 display: (!hide) ? 'block' : 'none',
-                borderRadius: borderRadiusLG,
+                lineHeight: '2em'
             }}
+            className={`message`}
+            id={`${user.toLowerCase()}`}
             onMouseEnter={() => { setHidden(false) }}
             onMouseLeave={() => { setHidden(true) }}
         >
-            <div
+            {/* <div
                 style={{
                     display: 'flex',
                     flex: 'row',
@@ -87,14 +88,16 @@ export default function Message({ user, hide, message }: Info) {
                     padding: '10px',
                 }}><strong>{user}</strong></p>
             </div>
-            <div>
-                <div style={{
+            <div> */}
+                <span  
+                id={`${user.toLowerCase()}-response`}
+                style={{
                     textAlign: 'justify',
-                }} dangerouslySetInnerHTML={{ __html: message }}></div>
-                <span style={{ position: 'absolute' }}>
+                }} dangerouslySetInnerHTML={{ __html: message }}></span>
+                {/* <span style={{ position: 'absolute' }}>
                     <UserOutlined hidden={hidden} />
-                </span>
-            </div>
+                </span> */}
+            {/* </div> */}
         </div>
     )
 };

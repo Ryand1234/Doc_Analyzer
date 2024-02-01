@@ -1,11 +1,11 @@
 "use client";
 import React, { useState } from 'react';
-import { Layout, Button } from 'antd';
+import { Layout, Button, message } from 'antd';
 import ChatBox from './layout/chatbox';
 import Card from './layout/card';
 const { Header } = Layout;
 import { Info } from './interface/chat-interface';
-import { AudioOutlined, FileSearchOutlined } from '@ant-design/icons';
+import { BarsOutlined, AudioOutlined, UserOutlined } from '@ant-design/icons';
 import { Input, Space } from 'antd';
 import type { SearchProps } from 'antd/es/input/Search';
 import callGPT from './server/openrouter';
@@ -129,7 +129,6 @@ const App: React.FC = () => {
       // Correct handling of last 5 messages for creating a new summary
       const lastFiveMessages = messages.slice(-5).map(turn => `${turn.user}: ${turn.message}`).join('\n');
       let originalContext = '';
-      console.log(messages.length, messages.length%5)
       if (messages.length % 5 == 0) {
         console.log(messages)
         originalContext = (messages[1].hide) ? `Original Document Content: ${messages[1].message}` : '';
@@ -157,25 +156,19 @@ const App: React.FC = () => {
           width: '100%',
           display: 'flex',
           alignItems: 'center',
+          justifyContent: 'space-between'
         }}
       >
-        <div style={{
-          right: 5,
-          position: 'inherit',
-          margin: '2px'
-        }}>
-          {/* <Card key={1} id={"1"} text={"New Conversation"} onClick={resetConversation}/> */}
-          <Button type="primary" icon={<FileSearchOutlined />} size="middle" onClick={newConversation}>
-            New Conversation
-          </Button>
-          <Button type="primary" icon={<FileSearchOutlined />} size="middle" onClick={resetConversation}>
-            Reset Conversation
-          </Button>
-          {/* <div style={{background: 'white'}}>New Conversation</div> */}
-
+        <div style={{ marginLeft: '15px', fontSize: '1.5rem' }}>
+          <a href="/information"><BarsOutlined /></a>
+        </div>
+        <div style={{ flex: 1, textAlign: 'center' }}>Document AI</div>
+        <div style={{ marginRight: '15px' }}>
+          <UserOutlined />
         </div>
         <Toaster position="top-center" />
       </div>
+
 
       <Layout style={{ marginTop: '4rem' }}>
         {messages.length == 1 ? (
@@ -185,7 +178,7 @@ const App: React.FC = () => {
             marginRight: '10vw'
           }}>
             <NewChat setMessages={setMessages} />
-          </div>) : (<div style={{
+          </div>) : (<div className="card" style={{
             overflow: 'auto',
             marginLeft: '10vw',
             marginRight: '10vw'
@@ -196,7 +189,7 @@ const App: React.FC = () => {
       {messages.length > 1 && <div
         style={{
           position: 'fixed',
-          bottom: 30,
+          bottom: 0,
           zIndex: 1,
           paddingLeft: '5%',
           width: '100%',
@@ -205,11 +198,12 @@ const App: React.FC = () => {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
+          height: '10vh'
         }}>
-        <p style={{ color: 'black', display: (hold) ? 'block' : 'none' }}>Bot is analyzing your document!!! Please wait a little ;)</p>
+        <p style={{ position: 'absolute', bottom: 10, color: 'black', display: (hold) ? 'block' : 'none' }}>Bot is analyzing your document!!! Please wait a little ;)</p>
         <Search
           style={{
-            width: '100%',
+            // width: '100%'
           }}
           placeholder="input search text"
           enterButton="Search"

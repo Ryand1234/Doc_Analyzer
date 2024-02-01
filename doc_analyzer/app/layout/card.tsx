@@ -18,11 +18,11 @@ export default function Card(data: CardData) {
             color: 'black',
             textAlign: 'center',
             background: colorBgContainer,
-            borderRadius: borderRadiusLG,
             cursor: 'pointer',
             overflow: 'hidden',
             whiteSpace: 'nowrap',
-            textOverflow: 'ellipsis'
+            textOverflow: 'ellipsis',
+            lineHeight: '2em'
           }}
           onClick={data.onClick}
           >
