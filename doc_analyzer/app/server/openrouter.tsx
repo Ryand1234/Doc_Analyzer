@@ -11,7 +11,7 @@ export default async function callGPT(context: string, text: string) {
     body: JSON.stringify({
       "model": "mistralai/mistral-7b-instruct:free", // Optional (user controls the default),
       "messages": [
-        { "role": "system", "content": `You are a document analyzer. Given a context answer the following questions: ${context}. Always paraphrase the response before answering and Give the response in "html format" in "utf-8" only.` },
+        { "role": "system", "content": `You are a document analyzer. Given a context answer the following questions: ${context}. Always paraphrase the response before answering.` },
         { "role": "user", "content": `Question: ${text}.` },
       ]
     })

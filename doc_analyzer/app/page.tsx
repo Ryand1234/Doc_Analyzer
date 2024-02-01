@@ -115,13 +115,8 @@ const App: React.FC = () => {
       }
 
       let result = await callGPT(conversationString, value);
-      let lines = result.split('\n');
-      lines.pop();
-      lines.shift();
-      result = lines.join('\n')
       result = result.split('Question:');
-      console.log(result)
-      if(result.length > 1) {
+      if(result.length >= 1) {
         result = result[0]
       }
       setMessages(prevMessages => {
@@ -142,7 +137,6 @@ const App: React.FC = () => {
     }
     finally {
       setHold(false);
-      console.log(messages)
     }
 
     if (messages.length >= 5) {

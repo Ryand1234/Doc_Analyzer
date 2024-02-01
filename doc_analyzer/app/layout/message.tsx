@@ -4,7 +4,7 @@ import { Info } from '../interface/chat-interface';
 import './message.css'
 export default function Message({ user, hide, message }: Info) {
     const isHTML = /<[a-z][\s\S]*>/i.test(message);
-    
+
     return (
         <div
             style={{
@@ -14,13 +14,13 @@ export default function Message({ user, hide, message }: Info) {
                 // background: 'black',
                 color: 'black',
                 display: (!hide) ? 'block' : 'none',
-                    textAlign: 'justify',
-                    lineHeight: '2em'
+                textAlign: 'justify',
+                lineHeight: '2em'
             }}
             className={`message`}
             id={`${user.toLowerCase()}`}
         >
-            {isHTML ? <span
+            {/* {isHTML ? <span
                 id={`${user.toLowerCase()}-response`}
                 style={{
                     textAlign: 'justify',
@@ -28,7 +28,11 @@ export default function Message({ user, hide, message }: Info) {
                 (<span id={`${user.toLowerCase()}-response`}
                     style={{
                         textAlign: 'justify',
-                    }} >{message}</span>)}
+                    }} >{message}</span>)} */}
+            <span id={`${user.toLowerCase()}-response`}
+                style={{
+                    textAlign: 'justify',
+                }} >{message}</span>
         </div>
     )
 };
