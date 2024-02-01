@@ -27,39 +27,8 @@ import bot from '../../public/bot.png'
 //   }
 export default function Message({ user, hide, message }: Info) {
     const [hidden, setHidden] = useState(true);
-
-    const {
-        token: { colorBgContainer, borderRadiusLG },
-    } = theme.useToken();
-    // useEffect(() => {
-    //     const scriptSrcRegex = /<script\b[^>]*src=['"]([^'"]*)['"][^>]*><\/script>/gi;
-
-    //     // Find all script tags with src attribute within the inserted HTML
-    //     const scriptSrcMatches = message.match(scriptSrcRegex);
-    //     let scriptSrcs: Array<string> = []
-    //     if (scriptSrcMatches) {
-    //         scriptSrcs = scriptSrcMatches.map((scriptSrcTag) => {
-    //             const srcAttributeMatch = scriptSrcTag.match(/src=['"]([^'"]*)['"]/);
-    //             return srcAttributeMatch ? srcAttributeMatch[1] : '';
-    //           });
-
-    //     }
-    //     let match = message.match(/<script\b[^>]*>([\s\S]*?)<\/script>/i);
-    //     console.log("M1 :,", message, match, scriptSrcs)
-    //     if (match) {
-    //         loadExternalScripts(scriptSrcs)
-    //         .then(() => {
-    //             const scriptContent = match[1];
-    //             const scriptElement = document.createElement('script');
-    //             scriptElement.type = 'text/javascript';
-    //             scriptElement.text = scriptContent;
-    //             document.head.appendChild(scriptElement);
-    //         })
-    //         .catch((error) => {
-    //         console.error('Error loading external scripts:', error);
-    //         });
-    // }
-    // }, [user, message]);
+    const isHTML = /<[a-z][\s\S]*>/i.test(message);
+    
     return (
         <div
             style={{
@@ -77,24 +46,15 @@ export default function Message({ user, hide, message }: Info) {
             onMouseEnter={() => { setHidden(false) }}
             onMouseLeave={() => { setHidden(true) }}
         >
-            {/* <div
-                style={{
-                    display: 'flex',
-                    flex: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'left',
-                }}>
-                <Image alt="logo" width={25} height={25} src={user == 'Bot' ? bot : userImg} />
-                <p style={{
-                    padding: '10px',
-                }}><strong>{user}</strong></p>
-            </div>
-            <div> */}
-            <span
+            {isHTML ? <span
                 id={`${user.toLowerCase()}-response`}
                 style={{
                     textAlign: 'justify',
-                }} dangerouslySetInnerHTML={{ __html: message }}></span>
+                }} dangerouslySetInnerHTML={{ __html: message }}></span> : 
+                (<span id={`${user.toLowerCase()}-response`}
+                    style={{
+                        textAlign: 'justify',
+                    }} >{message}</span>)}
         </div>
     )
 };
