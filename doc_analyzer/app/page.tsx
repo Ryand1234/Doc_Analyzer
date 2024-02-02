@@ -12,6 +12,7 @@ import callGPT from './server/openrouter';
 import NewChat from './layout/new-chat';
 import { Toaster } from "react-hot-toast";
 import { toast } from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 const { Search } = Input;
 
 const suffix = (
@@ -25,16 +26,15 @@ const suffix = (
 
 
 const App: React.FC = () => {
+  const router = useRouter();
   const [collapsed, setCollapsed] = useState(true);
   const [inputValue, setInputValue] = useState('')
   const [hold, setHold] = useState(false);
 
 
-  const history: Array<string> = [
-    "iterate, add it",
-    "Data Pipeline",
-    "Full Stack Developer Requirements"
-  ]
+  const goSettings = () => {
+    router.push("/settings")
+  }
 
   const [messages, setMessages] = useState<Array<Info>>([
     {
@@ -175,7 +175,7 @@ const App: React.FC = () => {
         }}
       >
         <div style={{ marginLeft: '15px', fontSize: '1.5rem' }}>
-          <a href="/information"><BarsOutlined /></a>
+          <BarsOutlined  onClick={goSettings} />
         </div>
         <div style={{ flex: 1, textAlign: 'center' }}>Document AI</div>
         <div style={{ marginRight: '15px' }}>
