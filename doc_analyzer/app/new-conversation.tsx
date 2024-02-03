@@ -23,9 +23,13 @@ const suffix = (
   />
 );
 
-const NewConversation: React.FC = () => {
+interface NewConversationProps {
+  convoId: string;
+  setConvoId: (convo: string) => void;
+}
+
+const NewConversation: React.FC<NewConversationProps> = ({ convoId, setConvoId }) => {
   const router = useRouter();
-  const [convoId, setConvoId] = useState<string>("");
   const [inputValue, setInputValue] = useState('')
   const [hold, setHold] = useState(false);
 
@@ -34,10 +38,36 @@ const NewConversation: React.FC = () => {
 
     // Filter keys that start with "message-"
     const filteredKeys = allKeys.filter((key) => key.startsWith('conversation-') && key !== convoId);
-    console.log(filteredKeys);
-    if (filteredKeys.length >= 3) {
+    console.log('Old: ', filteredKeys, convoId)
+
+    if (filteredKeys.length >= 3 && convoId == "") {
       toast.error(`Sessions exhausted. You have ${filteredKeys.length} sessions.`)
-      router.push('/information');
+      router.push('/settings');
+      return;
+    }
+    if (convoId == "") {
+      setMessages([
+        {
+          "user": "Bot",
+          "hide": false,
+          "message": "Hi User!, Thanks for uploading the doc. You can ask questions on the doc now ;)"
+        }
+      ])
+      setSummary("");
+      toast.success('New Conversation Started!');
+    } else {
+      let key = `${convoId}`;
+      const conversationString = localStorage.getItem(key)
+      console.log("K: ", key)
+      if (conversationString === null) {
+        toast.error("Conversation not found")
+        localStorage.removeItem(key)
+        return;
+      }
+      const conversation = JSON.parse(conversationString)
+      setMessages([...conversation.messages]);
+      setSummary(conversation.summary);
+      toast.success('Conversation Resumed!');
     }
   }, [router, convoId])
 
@@ -59,6 +89,7 @@ const NewConversation: React.FC = () => {
       }
     ])
     setSummary("");
+    setConvoId("");
     toast.success('New Conversation Started!');
   }
 
@@ -78,7 +109,6 @@ const NewConversation: React.FC = () => {
     ])
     setSummary("");
     toast.success('Conversation Restarted!');
-    setConvoId("");
   }
 
   const resumeConversation = (uuid: string) => {
@@ -196,8 +226,8 @@ const NewConversation: React.FC = () => {
 
 
   return (
-    <div>
-      <Layout style={{  }}>
+    <div style={{ top: '10px', position: 'relative', color: 'black' }}>
+      <Layout style={{}}>
         {messages.length == 1 ? (
           <div style={{
             overflow: 'auto',

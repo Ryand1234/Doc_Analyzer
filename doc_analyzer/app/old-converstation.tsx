@@ -1,10 +1,13 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { Layout, Button, message } from 'antd';
+import ConvoElement from './layout/convo-element';
 import { useRouter } from 'next/navigation';
 
+interface OldConversationSchema {
+  setConversationId: any
+}
 
-const OldConversation: React.FC = () => {
+const OldConversation: React.FC<OldConversationSchema> = ({setConversationId}) => {
   const router = useRouter();
   const [conversations, setConversations] = useState<Array<string>>([])
 
@@ -14,14 +17,16 @@ const OldConversation: React.FC = () => {
     // Filter keys that start with "message-"
     const filteredKeys = allKeys.filter((key) => key.startsWith('conversation-'));
     console.log(filteredKeys);
+    filteredKeys.push("")
     setConversations([...filteredKeys]);
   }, [router]);
   return (
-    <div>
+    <div style={{top: '10px', position: 'relative', color: 'black'}}> 
         <ul>
         {
             conversations.map((conversation, index) =>(
-                <li key={index}>{conversation}</li>
+                <ConvoElement key={index} id={conversation} text={conversation} 
+                description={conversation} onClick={setConversationId} />
             ))
         }
         </ul>
