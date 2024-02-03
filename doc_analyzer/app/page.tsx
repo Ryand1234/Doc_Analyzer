@@ -5,16 +5,10 @@ import type { TabsProps } from 'antd';
 import NewConversation from './new-conversation';
 import OldConversation from './old-converstation';
 
-import { Layout, Button, message } from 'antd';
-import ChatBox from './layout/chatbox';
-import { Info } from './interface/chat-interface';
-import { BarsOutlined, AudioOutlined, UserOutlined } from '@ant-design/icons';
-import { Input, Space } from 'antd';
-import type { SearchProps } from 'antd/es/input/Search';
-import callGPT from './server/openrouter';
-import NewChat from './layout/new-chat';
+import { Layout } from 'antd';
+import { BarsOutlined, UserOutlined } from '@ant-design/icons';
 import { Toaster } from "react-hot-toast";
-import { toast } from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 const items: TabsProps['items'] = [
   {
     key: '1',
@@ -28,6 +22,14 @@ const items: TabsProps['items'] = [
   },
 ];
 const App: React.FC = () => {
+  
+const router = useRouter();
+
+
+const goSettings = () => {
+  router.push("/settings")
+}
+
   return (
 
     <Layout>
@@ -45,7 +47,7 @@ const App: React.FC = () => {
         }}
       >
         <div style={{ marginLeft: '15px', fontSize: '1.5rem' }}>
-          <a href="/information"><BarsOutlined /></a>
+          <BarsOutlined  onClick={goSettings} />
         </div>
         <div style={{ flex: 1, textAlign: 'center' }}>Document AI</div>
         <div style={{ marginRight: '15px' }}>
