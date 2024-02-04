@@ -23,24 +23,30 @@ const suffix = (
   />
 );
 
-interface NewConversationProps {
-  convoId: string;
-  setConvoId: (convo: string) => void;
-}
 
-const NewConversation: React.FC<NewConversationProps> = ({ convoId, setConvoId }) => {
+const NewConversation: React.FC = () => {
   const router = useRouter();
   const [inputValue, setInputValue] = useState('')
   const [hold, setHold] = useState(false);
+  const [convoId, setConvoId] = useState('');
 
   useEffect(() => {
     const allKeys = Object.keys(localStorage);
-
+    const currentConvo = localStorage.getItem('current-conversation');
+    let convoId = "";
+    if(currentConvo != null) {
+      const id = currentConvo.split('conversation-')[1]
+      setConvoId(id);
+      convoId = currentConvo;
+      // return;
+    }
+    console.log(currentConvo, "K: ", convoId);
     // Filter keys that start with "message-"
     const filteredKeys = allKeys.filter((key) => key.startsWith('conversation-') && key !== convoId);
     console.log('Old: ', filteredKeys, convoId)
 
     if (filteredKeys.length >= 3 && convoId == "") {
+      console.log("ERROR: ", filteredKeys, convoId)
       toast.error(`Sessions exhausted. You have ${filteredKeys.length} sessions.`)
       router.push('/settings');
       return;
@@ -69,7 +75,7 @@ const NewConversation: React.FC<NewConversationProps> = ({ convoId, setConvoId }
       setSummary(conversation.summary);
       toast.success('Conversation Resumed!');
     }
-  }, [router, convoId])
+  }, [router])
 
   const [messages, setMessages] = useState<Array<Info>>([
     {
@@ -128,6 +134,7 @@ const NewConversation: React.FC<NewConversationProps> = ({ convoId, setConvoId }
 
   function updateLocalStorage() {
     let key = `conversation-${convoId}`;
+    console.log("CURR: ", key, " ID: ", convoId)
     const conversation = localStorage.getItem(key)
     if (conversation == null) {
       const uuid = uuidv4();

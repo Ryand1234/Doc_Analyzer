@@ -22,7 +22,7 @@ const OldConversation: React.FC<OldConversationSchema> = ({setConversationId}) =
   }, [router]);
   return (
     <div style={{top: '10px', position: 'relative', color: 'black'}}> 
-        <ul>
+        <ul style={{width: '90%'}}>
         {
             conversations.map((conversation, index) =>(
                 <ConvoElement key={index} id={conversation} text={conversation} 

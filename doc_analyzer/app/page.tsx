@@ -8,7 +8,6 @@ import { BarsOutlined, UserOutlined } from '@ant-design/icons';
 import { Toaster } from "react-hot-toast";
 import { useRouter } from 'next/navigation';
 const App: React.FC = () => {
-  const [convoId, setConvoId] = useState<string>("");
 
   const router = useRouter();
 
@@ -24,7 +23,7 @@ const App: React.FC = () => {
 
   const setConvo = (convo: string) => {
     console.log('Set convo:', convo)
-    setConvoId(convo);
+    localStorage.setItem('current-conversation', convo);
     setSelectedTab(2);
   }
   return (
@@ -66,7 +65,7 @@ const App: React.FC = () => {
           <button className={selectedTab === 1 ? 'selected-tab' : 'not-selected-tab'} onClick={() => handleTabChange(1)}>All Conversations</button>
           <button className={selectedTab === 2 ? 'selected-tab' : 'not-selected-tab'} onClick={() => handleTabChange(2)}>New Conversations</button>
         </div>
-        {selectedTab === 1 ? <OldConversation setConversationId={setConvo} /> : <NewConversation convoId={convoId} setConvoId={setConvoId} />}
+        {selectedTab === 1 ? <OldConversation setConversationId={setConvo} /> : <NewConversation />}
       </div>
     </Layout>
   )
