@@ -1,35 +1,53 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { Layout, Button, message } from 'antd';
+import { Layout, Modal } from 'antd';
 import ChatBox from './layout/chatbox';
 import { Info } from './interface/chat-interface';
-import { BarsOutlined, AudioOutlined, UserOutlined } from '@ant-design/icons';
 import { Input, Space } from 'antd';
 import type { SearchProps } from 'antd/es/input/Search';
 import callGPT from './server/openrouter';
 import NewChat from './layout/new-chat';
-import { Toaster } from "react-hot-toast";
+import Error from './layout/error';
 import { toast } from 'react-hot-toast';
 import { v4 as uuidv4 } from 'uuid';
-import { useRouter } from 'next/navigation';
 const { Search } = Input;
 
-const suffix = (
-  <AudioOutlined
-    style={{
-      fontSize: 16,
-      color: '#1677ff',
-    }}
-  />
-);
 
+interface NewConversationProps {
+  handleTabChange: any
+}
 
-const NewConversation: React.FC = () => {
-  const router = useRouter();
+const NewConversation: React.FC<NewConversationProps> = ({handleTabChange}) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [inputValue, setInputValue] = useState('')
   const [hold, setHold] = useState(false);
   const [convoId, setConvoId] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [newConvo, setNewConvo] = useState(false);
+  const [addViewed, setAddViewed] = useState(false);
+  const showModal = (message: string) => {
+    setErrorMessage(message);
+    setIsModalOpen(true);
+  };
 
+  const handleOk = () => {
+    if(newConvo && addViewed == false) {
+      handleTabChange(1);
+    }
+    if(newConvo && addViewed)
+    {
+      newConversation()
+    }
+    setAddViewed(false);
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    if(newConvo){
+      handleTabChange(1);
+    }
+      setIsModalOpen(false);
+  };
   useEffect(() => {
     const allKeys = Object.keys(localStorage);
     const currentConvo = localStorage.getItem('current-conversation');
@@ -39,6 +57,8 @@ const NewConversation: React.FC = () => {
       setConvoId(id);
       convoId = currentConvo;
       // return;
+    } else {
+      setNewConvo(true);
     }
     console.log(currentConvo, "K: ", convoId);
     // Filter keys that start with "message-"
@@ -48,7 +68,7 @@ const NewConversation: React.FC = () => {
     if (filteredKeys.length >= 3 && convoId == "") {
       console.log("ERROR: ", filteredKeys, convoId)
       toast.error(`Sessions exhausted. You have ${filteredKeys.length} sessions.`)
-      router.push('/settings');
+      showModal("You have exhausted your daily limit.\n Please watch an add to continue!!")
       return;
     }
     if (convoId == "") {
@@ -68,6 +88,8 @@ const NewConversation: React.FC = () => {
       if (conversationString === null) {
         toast.error("Conversation not found")
         localStorage.removeItem(key)
+        handleTabChange(1);
+        // showModal("You have exhausted your daily limit.\n Please watch an add to continue!!")
         return;
       }
       const conversation = JSON.parse(conversationString)
@@ -75,7 +97,7 @@ const NewConversation: React.FC = () => {
       setSummary(conversation.summary);
       toast.success('Conversation Resumed!');
     }
-  }, [router])
+  }, [handleTabChange])
 
   const [messages, setMessages] = useState<Array<Info>>([
     {
@@ -95,7 +117,6 @@ const NewConversation: React.FC = () => {
       }
     ])
     setSummary("");
-    setConvoId("");
     toast.success('New Conversation Started!');
   }
 
@@ -151,6 +172,14 @@ const NewConversation: React.FC = () => {
 
   const onSearch: SearchProps['onSearch'] = async (value, _e, info) => {
     // console.log(info?.source, value);
+    if(newConvo) {
+      setNewConvo(false);
+    }
+    if(messages.length > 4)
+    {
+      showModal("You have exceeded the maximum number of messages on a conversation. Watch an add and add 10 more messages to this conversation!!");
+      return;
+    }
     if (hold) {
       return;
     }
@@ -234,6 +263,9 @@ const NewConversation: React.FC = () => {
 
   return (
     <div style={{ top: '10px', position: 'relative', color: 'black' }}>
+      <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        <Error message={errorMessage}/>
+      </Modal>
       <Layout style={{}}>
         {messages.length == 1 ? (
           <div style={{

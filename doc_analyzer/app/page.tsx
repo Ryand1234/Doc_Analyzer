@@ -65,7 +65,7 @@ const App: React.FC = () => {
           <button className={selectedTab === 1 ? 'selected-tab' : 'not-selected-tab'} onClick={() => handleTabChange(1)}>All Conversations</button>
           <button className={selectedTab === 2 ? 'selected-tab' : 'not-selected-tab'} onClick={() => handleTabChange(2)}>New Conversations</button>
         </div>
-        {selectedTab === 1 ? <OldConversation setConversationId={setConvo} /> : <NewConversation />}
+        {selectedTab === 1 ? <OldConversation setConversationId={setConvo} /> : <NewConversation handleTabChange={handleTabChange}/>}
       </div>
     </Layout>
   )
