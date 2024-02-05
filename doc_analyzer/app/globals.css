@@ -38,3 +38,14 @@ h1, h2, h3, h4, h5, h6 {
   font-size: revert;
   font-weight: revert;
 }
+
+.selected-tab {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Add box shadow to the underline */
+  padding: 10px;
+}
+
+
+.not-selected-tab {
+  padding: 10px
+}
+

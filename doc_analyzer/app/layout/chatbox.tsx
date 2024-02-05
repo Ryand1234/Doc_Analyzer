@@ -19,7 +19,7 @@ export default function ChatBox({ messages }: MenuProps) {
             <Content id={"message-section"} 
         ref={messagesContainerRef} 
         style={{
-        height: '75vh',
+        height: '70vh',
         overflowY: 'auto',}}>
                 {messages.map((element, index) => (
                         <Message key={index} hide={element.hide} message={element.message} user={element.user} />
